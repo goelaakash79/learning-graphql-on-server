@@ -4,6 +4,9 @@ const { resolvers } = require("./resolvers");
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+require("dotenv").config();
+
+const { PORT, MONGO_URI } = process.env;
 
 const startServer = async () => {
 	const server = new ApolloServer({
@@ -13,14 +16,14 @@ const startServer = async () => {
 
 	server.applyMiddleware({ app });
 
-	await mongoose.connect("mongodb://localhost:27017/graphql-demo-db", {
+	await mongoose.connect(MONGO_URI, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true
 	});
 
-	app.listen({ port: 4000 }, () =>
+	app.listen({ port: PORT }, () =>
 		console.log(
-			`🚀 Server ready at http://localhost:4000${server.graphqlPath}`
+			`🚀 Server running at http://localhost:${PORT}${server.graphqlPath}`
 		)
 	);
 };
